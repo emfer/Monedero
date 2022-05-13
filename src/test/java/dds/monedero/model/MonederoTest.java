@@ -7,7 +7,10 @@ import dds.monedero.exceptions.SaldoMenorException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MonederoTest {
   private Cuenta cuenta;
@@ -20,6 +23,8 @@ public class MonederoTest {
   @Test
   void Poner() {
     cuenta.poner(1500);
+    assertEquals(cuenta.getSaldo(),1500);
+    
   }
 
   @Test
@@ -32,6 +37,15 @@ public class MonederoTest {
     cuenta.poner(1500);
     cuenta.poner(456);
     cuenta.poner(1900);
+    assertEquals(cuenta.getMovimientos().size(), 3);
+  }
+  
+  @Test
+  void FallaEnDepositos() {
+    cuenta.poner(1500);
+    cuenta.poner(456);
+    cuenta.poner(1900);
+    assertFalse(cuenta.getMovimientos().size()==2);
   }
 
   @Test
@@ -51,6 +65,18 @@ public class MonederoTest {
           cuenta.sacar(1001);
     });
   }
+  
+  @Test
+  void ComparoConCuentaDistinta() {
+   Cuenta cuentaSecundaria = new Cuenta();
+   cuentaSecundaria.setSaldo(4000);
+   cuentaSecundaria.sacar(300);
+   cuentaSecundaria.sacar(200);
+   cuentaSecundaria.poner(2000);
+   double importe = cuentaSecundaria.getSaldo();
+   assertTrue(importe>cuenta.getSaldo());
+   
+  }
 
   @Test
   public void ExtraerMasDe1000() {
@@ -59,10 +85,14 @@ public class MonederoTest {
       cuenta.sacar(1001);
     });
   }
-
+  
   @Test
   public void ExtraerMontoNegativo() {
-    assertThrows(MontoNegativoException.class, () -> cuenta.sacar(-500));
+    assertThrows(MontoNegativoException.class, () -> {
+      cuenta.setSaldo(200);
+      cuenta.sacar(-1);
+    });
   }
 
+ 
 }
