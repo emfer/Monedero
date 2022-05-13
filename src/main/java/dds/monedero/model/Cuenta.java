@@ -9,7 +9,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class Cuenta {
+  private static final Double limiteAsignado = (double) 1000;
 
   private double saldo = 0;
   private List<Movimiento> movimientos = new ArrayList<>();
@@ -17,10 +20,18 @@ public class Cuenta {
   public Cuenta() {
     saldo = 0;
   }
+  public List<Movimiento> getMovimientos() {
+	    return movimientos;
+	  }
 
-  public Cuenta(double montoInicial) {
-    saldo = montoInicial;
-  }
+  public double getSaldo() {
+	    return saldo;
+	  }
+
+  public void setSaldo(double saldo) {
+	    this.saldo = saldo;
+	  }
+
 
   public void setMovimientos(List<Movimiento> movimientos) {
     this.movimientos = movimientos;
@@ -46,7 +57,7 @@ public class Cuenta {
       throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
     }
     double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
-    double limite = 1000 - montoExtraidoHoy;
+    double limite = limiteAsignado - montoExtraidoHoy;
     if (cuanto > limite) {
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
           + " diarios, límite: " + limite);
@@ -66,16 +77,6 @@ public class Cuenta {
         .sum();
   }
 
-  public List<Movimiento> getMovimientos() {
-    return movimientos;
-  }
 
-  public double getSaldo() {
-    return saldo;
-  }
-
-  public void setSaldo(double saldo) {
-    this.saldo = saldo;
-  }
 
 }
