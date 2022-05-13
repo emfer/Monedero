@@ -26,6 +26,13 @@ public class MonederoTest {
     assertEquals(cuenta.getSaldo(),1500);
     
   }
+  @Test
+  void Sacar() {
+    cuenta.poner(1500);
+    cuenta.sacar(500);
+    assertEquals(cuenta.getSaldo(),1000);
+    
+  }
 
   @Test
   void PonerMontoNegativo() {
